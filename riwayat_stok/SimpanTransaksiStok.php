@@ -1,12 +1,24 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$id_supplier = $_POST['id_supplier'];
-$kode_produk = $_POST['kode_produk'];
-$tgl_transaksi = $_POST['tgl_transaksi'];
-$tgl_kadaluarsa = !empty($_POST['tgl_kadaluarsa']) ? $_POST['tgl_kadaluarsa'] : null;
-$jumlah = (int) $_POST['jumlah'];
+$id_supplier   = (int) ($_POST['id_supplier'] ?? 0);
+$kode_produk   = trim($_POST['kode_produk'] ?? '');
+$tgl_transaksi = trim($_POST['tgl_transaksi'] ?? '');
+$tgl_kadaluarsa = !empty($_POST['tgl_kadaluarsa']) ? trim($_POST['tgl_kadaluarsa']) : null;
+$jumlah        = (int) ($_POST['jumlah'] ?? 0);
+
+if ($id_supplier <= 0 || empty($kode_produk) || empty($tgl_transaksi) || $jumlah <= 0) {
+    error_log("SimpanTransaksiStok: input tidak valid");
+    header('Location: TambahTransaksiStok.php?error=input');
+    exit;
+}
+
+if (!strtotime($tgl_transaksi)) {
+    header('Location: TambahTransaksiStok.php?error=tanggal');
+    exit;
+}
 
 // Get harga satuan dari kategori produk
 $sql_harga = "SELECT k.harga_satuan FROM produk p JOIN kategori k ON p.id_kategori = k.id_kategori WHERE p.kode_produk = ?";

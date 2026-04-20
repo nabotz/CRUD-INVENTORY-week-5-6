@@ -63,9 +63,11 @@ $result = $koneksi->query("SELECT * FROM supplier ORDER BY nama")->fetchAll();
                                         <td class="actions">
                                             <a href="KoreksiSupplier.php?id=<?= $row['id_supplier'] ?>"
                                                 class="btn btn-sm btn-secondary">Edit</a>
-                                            <a href="HapusSupplier.php?id=<?= $row['id_supplier'] ?>"
-                                                class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Hapus supplier ini?')">Hapus</a>
+                                            <form method="POST" action="HapusSupplier.php" style="display:inline;" onsubmit="return confirm('Hapus supplier ini?')">
+                                                <input type="hidden" name="id" value="<?= $row['id_supplier'] ?>">
+                                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

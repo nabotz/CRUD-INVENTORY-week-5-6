@@ -1,5 +1,6 @@
 <?php
 session_start();
+include_once __DIR__ . '/includes/csrf.php';
 
 // Cek apakah user sudah login
 if (!isset($_SESSION['user_id'])) {
@@ -14,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
 
         if ($user) {
             // Auto-login berhasil, set session
+            session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['nama'] = $user['nama'];

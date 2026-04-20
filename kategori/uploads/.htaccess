@@ -1,0 +1,9 @@
+# Lindungi folder uploads dari eksekusi file PHP
+# Sesuai best practice: ref/file upload.md
+
+Options -Indexes
+
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|cgi|sh)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>

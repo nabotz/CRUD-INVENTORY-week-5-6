@@ -3,7 +3,7 @@ require_once '../auth.php';
 include "../koneksi.php";
 
 $base_url = '../';
-$current_page = 'user';
+$current_page = 'pengaturan';
 
 $result = $koneksi->query("SELECT * FROM users ORDER BY nama")->fetchAll();
 ?>
@@ -58,16 +58,20 @@ $result = $koneksi->query("SELECT * FROM users ORDER BY nama")->fetchAll();
                                 foreach ($result as $row): ?>
                                     <tr>
                                         <td><?= $no++ ?></td>
-                                        <td><img src="uploads/<?= htmlspecialchars($row['foto']) ?>"
-                                                alt="<?= htmlspecialchars($row['nama']) ?>"></td>
+                                        <td><img src="uploads/thumbs/<?= htmlspecialchars($row['foto']) ?>"
+                                                alt="<?= htmlspecialchars($row['nama']) ?>"
+                                                onerror="this.src='uploads/<?= htmlspecialchars($row['foto']) ?>'"></td>
                                         <td><strong><?= htmlspecialchars($row['username']) ?></strong></td>
                                         <td><?= htmlspecialchars($row['nama']) ?></td>
                                         <td><?= htmlspecialchars($row['email']) ?></td>
                                         <td class="actions">
                                             <a href="KoreksiUser.php?id=<?= $row['id'] ?>"
                                                 class="btn btn-sm btn-secondary">Edit</a>
-                                            <a href="HapusUser.php?id=<?= $row['id'] ?>" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Hapus user ini?')">Hapus</a>
+                                            <form method="POST" action="HapusUser.php" style="display:inline;" onsubmit="return confirm('Hapus user ini?')">
+                                                <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

@@ -1,16 +1,16 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$id = $_GET['id'] ?? '';
+$id = (int) ($_POST['id'] ?? 0);
 
-if (empty($id)) {
+if ($id <= 0) {
     header('Location: TampilSupplier.php');
     exit;
 }
 
-$sql = "DELETE FROM supplier WHERE id_supplier = ?";
-$stmt = $koneksi->prepare($sql);
+$stmt = $koneksi->prepare("DELETE FROM supplier WHERE id_supplier = ?");
 
 try {
     $stmt->execute([$id]);

@@ -1,16 +1,16 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$id = $_GET['id'] ?? '';
+$id = $_POST['id'] ?? '';
 
 if (empty($id)) {
     header('Location: TampilProduk.php');
     exit;
 }
 
-$sql = "DELETE FROM produk WHERE kode_produk = ?";
-$stmt = $koneksi->prepare($sql);
+$stmt = $koneksi->prepare("DELETE FROM produk WHERE kode_produk = ?");
 
 try {
     $stmt->execute([$id]);

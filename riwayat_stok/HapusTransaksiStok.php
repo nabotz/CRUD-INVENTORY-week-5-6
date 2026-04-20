@@ -1,16 +1,16 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
 
-$id = $_GET['id'] ?? '';
+$id = (int) ($_POST['id'] ?? 0);
 
-if (empty($id)) {
+if ($id <= 0) {
     header('Location: TampilRiwayatStok.php');
     exit;
 }
 
-$sql = "DELETE FROM transaksi_stok WHERE id_transaksi = ?";
-$stmt = $koneksi->prepare($sql);
+$stmt = $koneksi->prepare("DELETE FROM transaksi_stok WHERE id_transaksi = ?");
 
 try {
     $stmt->execute([$id]);

@@ -3,7 +3,7 @@ require_once '../auth.php';
 include "../koneksi.php";
 
 $base_url = '../';
-$current_page = 'riwayat_stok';
+$current_page = 'laporan';
 
 $result = $koneksi->query(
     "SELECT ts.*, s.nama, p.kode_produk as kode, k.nama_kategori, k.harga_satuan
@@ -95,9 +95,11 @@ $result = $koneksi->query(
                                         <td class="actions">
                                             <a href="KoreksiTransaksiStok.php?id=<?= $row['id_transaksi'] ?>"
                                                 class="btn btn-sm btn-secondary">Edit</a>
-                                            <a href="HapusTransaksiStok.php?id=<?= $row['id_transaksi'] ?>"
-                                                class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Hapus transaksi ini?')">Hapus</a>
+                                            <form method="POST" action="HapusTransaksiStok.php" style="display:inline;" onsubmit="return confirm('Hapus transaksi ini?')">
+                                                <input type="hidden" name="id" value="<?= $row['id_transaksi'] ?>">
+                                                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger">Hapus</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>

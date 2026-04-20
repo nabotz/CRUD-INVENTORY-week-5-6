@@ -1,28 +1,25 @@
 <?php
 require_once '../auth.php';
+csrf_check();
 include "../koneksi.php";
+include_once '../includes/image_helper.php';
 
-$id = $_GET['id'] ?? '';
+$id = (int) ($_POST['id'] ?? 0);
 
-if (empty($id)) {
+if ($id <= 0) {
     header('Location: TampilUser.php');
     exit;
 }
 
-// Ambil data user untuk menghapus foto dengan prepared statement
-$sql_foto = "SELECT foto FROM users WHERE id = ?";
-$stmt_foto = $koneksi->prepare($sql_foto);
+$stmt_foto = $koneksi->prepare("SELECT foto FROM users WHERE id = ?");
 $stmt_foto->execute([$id]);
 $data = $stmt_foto->fetch();
 
-// Hapus foto jika ada
-if (!empty($data['foto']) && file_exists('uploads/' . $data['foto'])) {
-    unlink('uploads/' . $data['foto']);
+if (!empty($data['foto'])) {
+    hapus_gambar($data['foto'], 'uploads/');
 }
 
-// Hapus user dengan prepared statement
-$sql = "DELETE FROM users WHERE id = ?";
-$stmt = $koneksi->prepare($sql);
+$stmt = $koneksi->prepare("DELETE FROM users WHERE id = ?");
 
 try {
     $stmt->execute([$id]);
